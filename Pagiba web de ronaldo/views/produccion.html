@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Producción</title>
+    <link rel="stylesheet" href="../css/produccion.css"> <!-- Enlace al archivo CSS -->
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de Formulario de Producción -->
+        <div class="form-section">
+            <h1>Gestión de Producción</h1>
+            <form id="produccionForm">
+                <div class="form-group">
+                    <label for="cod_prod">Código del Producto:</label>
+                    <input type="text" id="cod_prod" name="Cod_prod" required>
+                </div>
+                <div class="form-group">
+                    <label for="fecha_pro">Fecha:</label>
+                    <input type="date" id="fecha_pro" name="Fecha_pro" required>
+                </div>
+                <div class="form-group">
+                    <label for="canti_pro">Cantidad:</label>
+                    <input type="number" id="canti_pro" name="Canti_pro" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="activo" name="Estado" value="1" required>
+                        <label for="activo">Activo</label>
+                        <input type="radio" id="inactivo" name="Estado" value="0">
+                        <label for="inactivo">Inactivo</label>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="button" onclick="crearProduccion()">Crear</button>
+                    <button type="button" onclick="modificarProduccion()">Modificar</button>
+                    <button type="button" onclick="eliminarProduccion()">Eliminar</button>
+                    <button type="button" onclick="salir()">Salir</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sección de Listado de Producción -->
+        <div class="info-section">
+            <h2>Listado de Producción</h2>
+            <table id="produccion-table">
+                <thead>
+                    <tr>
+                        <th>Código del Producto</th>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de producción se agregarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Botón para gestionar país -->
+    <button class="btn-inventario" onclick="gestionarPais()">Gestión País</button>
+
+    <script>
+        async function fetchProducciones() {
+            try {
+                const response = await fetch('http://localhost:3000/api/produccion');
+                if (!response.ok) {
+                    throw new Error('Error al obtener las producciones');
+                }
+                const producciones = await response.json();
+                const tableBody = document.querySelector('#produccion-table tbody');
+                tableBody.innerHTML = ''; // Limpiar la tabla antes de rellenarla
+                producciones.forEach(produccion => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${produccion.Cod_prod || 'No disponible'}</td>
+                        <td>${produccion.Fecha_pro || 'No disponible'}</td>
+                        <td>${produccion.Canti_pro || 'No disponible'}</td>
+                        <td>${produccion.Estado === 1 ? 'Activo' : 'Inactivo'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al obtener las producciones:', error);
+            }
+        }
+
+        async function crearProduccion() {
+            const formData = new FormData(document.getElementById('produccionForm'));
+            const data = {
+                Cod_prod: formData.get('Cod_prod'), // Código del Producto
+                Fecha_pro: formData.get('Fecha_pro'),
+                Canti_pro: formData.get('Canti_pro'),
+                Estado: formData.get('Estado')
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/produccion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al crear la producción');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchProducciones(); // Actualiza la tabla de producciones
+            } catch (error) {
+                console.error('Error al crear la producción:', error);
+                alert('Error al crear la producción: ' + error.message);
+            }
+        }
+
+        async function modificarProduccion() {
+            const formData = new FormData(document.getElementById('produccionForm'));
+            const data = {
+                Fecha_pro: formData.get('Fecha_pro'),
+                Canti_pro: formData.get('Canti_pro'),
+                Estado: formData.get('Estado')
+            };
+
+            const codigo = formData.get('Cod_prod');
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/produccion/${codigo}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al modificar la producción');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchProducciones(); // Actualiza la tabla de producciones
+            } catch (error) {
+                console.error('Error al modificar la producción:', error);
+                alert('Error al modificar la producción: ' + error.message);
+            }
+        }
+
+        async function eliminarProduccion() {
+            const codigo = document.getElementById('cod_prod').value;
+
+            if (!codigo) {
+                alert('Ingrese el código del producto para eliminar');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/produccion/${codigo}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al eliminar la producción');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchProducciones(); // Actualiza la tabla de producciones
+            } catch (error) {
+                console.error('Error al eliminar la producción:', error);
+                alert('Error al eliminar la producción: ' + error.message);
+            }
+        }
+
+        function salir() {
+            // Redirecciona o realiza alguna acción al salir
+            alert('Saliendo...');
+        }
+
+        function gestionarPais() {
+            // Redirecciona a la página de gestión de país
+            window.location.href = 'pais.html'; // Asegúrate de tener este archivo en el mismo directorio
+        }
+
+        // Carga las producciones al cargar la página
+        window.onload = fetchProducciones;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+ /* Fondo azul para toda la página */
+ body {
+     background-color: #007bff;
+     /* Color azul */
+     color: white;
+     /* Texto en color blanco */
+     font-family: Arial, sans-serif;
+ }
+
+ /* Estilos para el contenedor */
+ .container {
+     max-width: 600px;
+     /* Ancho reducido del contenedor */
+     margin: 0 auto;
+     padding: 15px;
+     /* Padding reducido */
+     background-color: #ffffff;
+     border-radius: 10px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     color: #333333;
+ }
+
+ /* Estilos para la sección del formulario */
+ .form-section h2 {
+     color: #007bff;
+     font-size: 20px;
+     /* Tamaño de fuente más pequeño */
+ }
+
+ .form-group label {
+     display: block;
+     margin-bottom: 3px;
+     /* Espaciado reducido */
+     color: #333333;
+     font-size: 14px;
+     /* Tamaño de fuente más pequeño */
+ }
+
+ .form-group input[type="text"],
+ .form-group input[type="number"],
+ .form-group input[type="radio"] {
+     width: 100%;
+     padding: 5px;
+     /* Padding reducido */
+     margin-bottom: 8px;
+     /* Margen inferior reducido */
+     border: 1px solid #dddddd;
+     border-radius: 5px;
+     font-size: 14px;
+     /* Tamaño de fuente más pequeño */
+ }
+
+ /* Estilos para los botones */
+ .buttons {
+     display: flex;
+     justify-content: space-between;
+ }
+
+ .buttons button {
+     padding: 8px 10px;
+     /* Padding reducido */
+     background-color: #007bff;
+     color: white;
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+     font-size: 14px;
+     /* Tamaño de fuente más pequeño */
+ }
+
+ .buttons button:hover {
+     background-color: #0056b3;
+ }
+
+ /* Estilos para la sección de información */
+ .info-section h3 {
+     color: #007bff;
+     font-size: 18px;
+     /* Tamaño de fuente más pequeño */
+ }
+
+ .info-section p {
+     color: #333333;
+     font-size: 14px;
+     /* Tamaño de fuente más pequeño */
+ }
+
+ /* Estilos para el botón azul en la esquina inferior derecha */
+ .btn-producto {
+     position: fixed;
+     bottom: 20px;
+     right: 20px;
+     background-color: #007bff;
+     /* Azul */
+     color: white;
+     border: none;
+     padding: 10px 20px;
+     border-radius: 5px;
+     cursor: pointer;
+     font-size: 16px;
+     z-index: 1000;
+     /* Asegura que el botón esté por encima de otros elementos */
+ }
+
+ .btn-producto:hover {
+     background-color: #0056b3;
+     /* Azul oscuro al pasar el ratón */
+ }
+
+ /* Estilos para el formulario y la tabla */
+ .form-section,
+ .info-section {
+     margin: 20px;
+ }
+
+ .form-group {
+     margin-bottom: 15px;
+ }
+
+ .buttons button {
+     margin-right: 10px;
+ }
+
+ table {
+     width: 100%;
+     border-collapse: collapse;
+ }
+
+ th,
+ td {
+     padding: 10px;
+     border: 1px solid #ddd;
+     text-align: left;
+ }
+
+ th {
+     background-color: #17df10;
+ }

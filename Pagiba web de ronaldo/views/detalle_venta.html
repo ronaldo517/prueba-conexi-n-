@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Detalle de Venta</title>
+    <link rel="stylesheet" href="../css/detalle_venta.css"> <!-- Enlace al archivo CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de Detalle de Venta -->
+        <div class="form-section">
+            <h2>Detalle de Venta</h2>
+            <div class="form-group">
+                <label for="codigo-venta">Código de venta:</label>
+                <input type="text" id="codigo-venta" name="codigo-venta" maxlength="10" required>
+            </div>
+            <div class="form-group">
+                <label for="codigo-producto">Código de producto:</label>
+                <input type="text" id="codigo-producto" name="codigo-producto" maxlength="3" required>
+            </div>
+            <div class="form-group">
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad" name="cantidad" required>
+            </div>
+            <div class="form-group">
+                <label for="valor-unitario">Valor Unitario:</label>
+                <input type="number" id="valor-unitario" name="valor-unitario" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Estado:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="estado" value="1" required> Activo</label>
+                    <label><input type="radio" name="estado" value="0" required> Inactivo</label>
+                </div>
+            </div>
+            <div class="buttons">
+                <button id="create-detalle">Crear</button>
+                <button id="update-detalle">Modificar</button>
+                <button id="delete-detalle">Eliminar</button>
+                <button id="exit-detalle">Salir</button>
+            </div>
+        </div>
+
+        <!-- Sección de Información -->
+        <div class="info-section">
+            <h3>Detalles de productos</h3>
+            <table id="detalle-table">
+                <thead>
+                    <tr>
+                        <th>Código Venta</th>
+                        <th>Código Producto</th>
+                        <th>Cantidad</th>
+                        <th>Valor Unitario</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de detalles se llenarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/api/detalle_venta'; // URL de la API de detalles de venta
+
+        document.getElementById('create-detalle').addEventListener('click', async () => {
+            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Cod_prod = document.getElementById('codigo-producto').value;
+            const Cant = document.getElementById('cantidad').value;
+            const ValorUnit = document.getElementById('valor-unitario').value;
+            const Estado = document.querySelector('input[name="estado"]:checked').value;
+
+            try {
+                const response = await fetch(`${apiUrl}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Cod_ven, Cod_prod, Cant, ValorUnit, Estado })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Detalle de venta creado con éxito');
+                    loadDetalles(); // Cargar detalles después de crear
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error al crear el detalle de venta:', error);
+                alert('Error al crear el detalle de venta');
+            }
+        });
+
+        document.getElementById('update-detalle').addEventListener('click', async () => {
+            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Cod_prod = document.getElementById('codigo-producto').value;
+            const Cant = document.getElementById('cantidad').value;
+            const ValorUnit = document.getElementById('valor-unitario').value;
+            const Estado = document.querySelector('input[name="estado"]:checked').value;
+
+            try {
+                const response = await fetch(`${apiUrl}/${Cod_ven}/${Cod_prod}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Cant, ValorUnit, Estado })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Detalle de venta actualizado con éxito');
+                    loadDetalles(); // Cargar detalles después de actualizar
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error al actualizar el detalle de venta:', error);
+                alert('Error al actualizar el detalle de venta');
+            }
+        });
+
+        document.getElementById('delete-detalle').addEventListener('click', async () => {
+            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Cod_prod = document.getElementById('codigo-producto').value;
+
+            try {
+                const response = await fetch(`${apiUrl}/${Cod_ven}/${Cod_prod}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Detalle de venta eliminado con éxito');
+                    loadDetalles(); // Cargar detalles después de eliminar
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error al eliminar el detalle de venta:', error);
+                alert('Error al eliminar el detalle de venta');
+            }
+        });
+
+        document.getElementById('exit-detalle').addEventListener('click', () => {
+            window.location.href = "menu2.html"; // Cambiar a la página menu2.html
+        });
+
+        async function loadDetalles() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                const tableBody = document.getElementById('detalle-table').getElementsByTagName('tbody')[0];
+
+                tableBody.innerHTML = '';
+
+                data.forEach(detalle => {
+                    const row = tableBody.insertRow();
+                    row.insertCell().innerText = detalle.Cod_ven;
+                    row.insertCell().innerText = detalle.Cod_prod;
+                    row.insertCell().innerText = detalle.Cant;
+                    row.insertCell().innerText = detalle.ValorUni;
+                    row.insertCell().innerText = detalle.Estado ? 'Activo' : 'Inactivo';
+                });
+            } catch (error) {
+                console.error('Error al cargar los detalles de venta:', error);
+            }
+        }
+
+        // Cargar detalles al inicio
+        loadDetalles();
+    </script>
+</body>
+
+</html>

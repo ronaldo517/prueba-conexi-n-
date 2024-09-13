@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Venta</title>
+    <link rel="stylesheet" href="../css/venta.css"> <!-- Enlace al archivo CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de Venta -->
+        <div class="form-section">
+            <h2>Venta</h2>
+            <div class="form-group">
+                <label for="codigo-venta">Código de venta:</label>
+                <input type="text" id="codigo-venta" name="codigo-venta">
+            </div>
+            <div class="form-group">
+                <label for="identificacion-cliente">Identificación del cliente:</label>
+                <input type="text" id="identificacion-cliente" name="identificacion-cliente">
+            </div>
+            <div class="form-group">
+                <label for="venta-total">Venta total:</label>
+                <input type="text" id="venta-total" name="venta-total">
+            </div>
+            <div class="form-group">
+                <label for="fecha-venta">Fecha de venta:</label>
+                <input type="date" id="fecha-venta" name="fecha-venta">
+            </div>
+            <div class="form-group">
+                <label>Estado:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="estado" value="1"> Activo</label>
+                    <label><input type="radio" name="estado" value="0"> Inactivo</label>
+                </div>
+            </div>
+            <div class="buttons">
+                <button id="create-venta">Crear</button>
+                <button id="update-venta">Modificar</button>
+                <button id="delete-venta">Eliminar</button>
+                <button id="exit-venta">Salir</button>
+                <!-- Botón para acceder a Detalle de Venta -->
+                <button id="detalle-venta">Detalle Venta</button>
+            </div>
+        </div>
+
+        <!-- Sección para la tabla de ventas -->
+        <div class="info-section">
+            <h3>Listado de Ventas</h3>
+            <table id="venta-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Identificación Cliente</th>
+                        <th>Venta Total</th>
+                        <th>Fecha de Venta</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de ventas se llenarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/api/venta'; // URL de la API de ventas
+
+        document.getElementById('create-venta').addEventListener('click', async () => {
+            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Idecliente = document.getElementById('identificacion-cliente').value;
+            const Ven_total = document.getElementById('venta-total').value;
+            const Fecha_vent = document.getElementById('fecha-venta').value;
+            const Estado = document.querySelector('input[name="estado"]:checked').value;
+
+            try {
+                await fetch(`${apiUrl}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Cod_ven, Idecliente, Ven_total, Fecha_vent, Estado })
+                });
+                alert('Venta creada');
+                fetchVentas(); // Actualiza la tabla después de crear
+            } catch (error) {
+                console.error('Error al crear la venta:', error);
+            }
+        });
+
+        document.getElementById('update-venta').addEventListener('click', async () => {
+            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Idecliente = document.getElementById('identificacion-cliente').value;
+            const Ven_total = document.getElementById('venta-total').value;
+            const Fecha_vent = document.getElementById('fecha-venta').value;
+            const Estado = document.querySelector('input[name="estado"]:checked').value;
+
+            try {
+                await fetch(`${apiUrl}/${Cod_ven}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Idecliente, Ven_total, Fecha_vent, Estado })
+                });
+                alert('Venta actualizada');
+                fetchVentas(); // Actualiza la tabla después de actualizar
+            } catch (error) {
+                console.error('Error al actualizar la venta:', error);
+            }
+        });
+
+        document.getElementById('delete-venta').addEventListener('click', async () => {
+            const Cod_ven = document.getElementById('codigo-venta').value;
+
+            try {
+                await fetch(`${apiUrl}/${Cod_ven}`, {
+                    method: 'DELETE'
+                });
+                alert('Venta eliminada');
+                fetchVentas(); // Actualiza la tabla después de eliminar
+            } catch (error) {
+                console.error('Error al eliminar la venta:', error);
+            }
+        });
+
+        document.getElementById('exit-venta').addEventListener('click', () => {
+            window.location.href = 'menu2.html'; // Cambia a la URL que desees
+        });
+
+        // Agregar evento para el botón "Detalle Venta"
+        document.getElementById('detalle-venta').addEventListener('click', () => {
+            window.location.href = 'detalle_venta.html'; // Redirigir a la página detalle_venta.html
+        });
+
+        // Función para cargar las ventas desde la base de datos y mostrar en la tabla
+        async function fetchVentas() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Error al obtener las ventas');
+                }
+                const ventas = await response.json();
+                const tableBody = document.querySelector('#venta-table tbody');
+                tableBody.innerHTML = ''; // Limpiar la tabla antes de rellenarla
+                ventas.forEach(venta => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${venta.Cod_ven}</td>
+                        <td>${venta.Idecliente}</td>
+                        <td>${venta.Ven_total}</td>
+                        <td>${venta.Fecha_vent}</td>
+                        <td>${venta.Estado === 1 ? 'Activo' : 'Inactivo'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al cargar las ventas:', error);
+                alert('Error al cargar las ventas');
+            }
+        }
+
+        // Llamar a la función fetchVentas al cargar la página
+        window.onload = fetchVentas;
+    </script>
+</body>
+
+</html>

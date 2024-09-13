@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Perfil</title>
+    <link rel="stylesheet" href="../css/perfil.css"> <!-- Enlace al archivo CSS -->
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de Perfil -->
+        <div class="form-section">
+            <h2>Perfil</h2>
+            <form id="perfil-form">
+                <div class="form-group">
+                    <label for="codigo-perfil">Código de perfil:</label>
+                    <input type="number" id="codigo-perfil" name="codigo-perfil" required>
+                </div>
+                <div class="form-group">
+                    <label for="descripcion-perfil">Descripción del perfil:</label>
+                    <input type="text" id="descripcion-perfil" name="descripcion-perfil" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="estado" value="1" required> Activo</label>
+                        <label><input type="radio" name="estado" value="0" required> Inactivo</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="usuario-id">ID de usuario:</label>
+                    <input type="text" id="usuario-id" name="usuario-id" maxlength="12" required>
+                </div>
+                <div class="buttons">
+                    <button type="button" id="create-perfil">Crear</button>
+                    <button type="button" id="update-perfil">Modificar</button>
+                    <button type="button" id="delete-perfil">Eliminar</button>
+                    <button type="button" id="exit-perfil">Salir</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sección de Información -->
+        <div class="info-section">
+            <h3>Lista de Perfiles</h3>
+            <table id="perfil-table">
+                <thead>
+                    <tr>
+                        <th>Código Perfil</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>ID Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de perfiles se llenarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/perfil'; // URL de la API de perfiles
+
+        document.getElementById('create-perfil').addEventListener('click', async () => {
+            const form = document.getElementById('perfil-form');
+            const formData = new FormData(form);
+            const data = {
+                cod_perfi: formData.get('codigo-perfil'),
+                descricion: formData.get('descripcion-perfil'),
+                estado: formData.get('estado'),
+                usuario_Id_usuar: formData.get('usuario-id')
+            };
+
+            try {
+                const response = await fetch(`${apiUrl}/create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                alert(result.message);
+                loadPerfiles(); // Cargar perfiles después de crear
+            } catch (error) {
+                console.error('Error al crear el perfil:', error);
+                alert('Error al crear el perfil');
+            }
+        });
+
+        document.getElementById('update-perfil').addEventListener('click', async () => {
+            const form = document.getElementById('perfil-form');
+            const formData = new FormData(form);
+            const data = {
+                cod_perfi: formData.get('codigo-perfil'),
+                descricion: formData.get('descripcion-perfil'),
+                estado: formData.get('estado'),
+                usuario_Id_usuar: formData.get('usuario-id')
+            };
+
+            try {
+                const response = await fetch(`${apiUrl}/update`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                alert(result.message);
+                loadPerfiles(); // Cargar perfiles después de actualizar
+            } catch (error) {
+                console.error('Error al actualizar el perfil:', error);
+                alert('Error al actualizar el perfil');
+            }
+        });
+
+        document.getElementById('delete-perfil').addEventListener('click', async () => {
+            const cod_perfi = document.getElementById('codigo-perfil').value;
+
+            try {
+                const response = await fetch(`${apiUrl}/delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cod_perfi })
+                });
+                const result = await response.json();
+                alert(result.message);
+                loadPerfiles(); // Cargar perfiles después de eliminar
+            } catch (error) {
+                console.error('Error al eliminar el perfil:', error);
+                alert('Error al eliminar el perfil');
+            }
+        });
+
+        document.getElementById('exit-perfil').addEventListener('click', () => {
+            window.location.href = "menu2.html"; // Cambiar a la página de menu2
+        });
+
+        async function loadPerfiles() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Error al cargar perfiles');
+                }
+                const perfiles = await response.json();
+                const tableBody = document.getElementById('perfil-table').getElementsByTagName('tbody')[0];
+
+                tableBody.innerHTML = '';
+
+                perfiles.forEach(perfil => {
+                    const row = tableBody.insertRow();
+                    row.insertCell().innerText = perfil.Cod_perfi;
+                    row.insertCell().innerText = perfil.Descricion;
+                    row.insertCell().innerText = perfil.Estado ? 'Activo' : 'Inactivo';
+                    row.insertCell().innerText = perfil.usuario_Id_usuar;
+                });
+            } catch (error) {
+                console.error('Error al cargar los perfiles:', error);
+                alert('Error al cargar los perfiles');
+            }
+        }
+
+        // Cargar perfiles al inicio
+        loadPerfiles();
+    </script>
+</body>
+
+</html>

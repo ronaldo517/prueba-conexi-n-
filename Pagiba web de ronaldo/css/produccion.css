@@ -1,0 +1,155 @@
+ body {
+     font-family: Arial, sans-serif;
+     background-color: #4a90e2;
+     margin: 0;
+     padding: 0;
+ }
+
+ .container {
+     display: flex;
+     justify-content: space-between;
+     padding: 20px;
+ }
+
+ .form-section {
+     background-color: #e3f2fd;
+     padding: 20px;
+     border-radius: 10px;
+     width: 40%;
+ }
+
+ .form-section h2 {
+     background-color: #2196f3;
+     color: white;
+     padding: 10px;
+     border-radius: 2px;
+ }
+
+ .form-group {
+     margin-bottom: 15px;
+ }
+
+ .form-group label {
+     display: block;
+     color: #d32f2f;
+     font-weight: bold;
+ }
+
+ .form-group input {
+     width: 100%;
+     padding: 10px;
+     margin-top: 5px;
+     border-radius: 5px;
+     border: 1px solid #ccc;
+ }
+
+ .form-group .radio-group {
+     display: flex;
+     gap: 10px;
+ }
+
+ .form-group .radio-group input {
+     margin-right: 5px;
+ }
+
+ .buttons {
+     display: flex;
+     gap: 10px;
+     justify-content: center;
+ }
+
+ .buttons button {
+     padding: 10px 20px;
+     border: none;
+     border-radius: 5px;
+     background-color: #64b5f6;
+     color: white;
+     cursor: pointer;
+ }
+
+ .buttons button:hover {
+     background-color: #42a5f5;
+ }
+
+ .info-section {
+     width: 50%;
+     text-align: center;
+     color: white;
+ }
+
+ .info-section h2 {
+     font-size: 24px;
+     margin-bottom: 20px;
+ }
+
+ .info-section h3 {
+     font-size: 20px;
+     margin-bottom: 20px;
+ }
+
+
+
+
+
+
+ /* Estilos para el botón azul en la esquina inferior derecha */
+ .btn-inventario {
+     position: fixed;
+     bottom: 20px;
+     right: 20px;
+     background-color: #007bff;
+     /* Azul */
+     color: white;
+     border: none;
+     padding: 10px 20px;
+     border-radius: 5px;
+     cursor: pointer;
+     font-size: 16px;
+     z-index: 1000;
+     /* Asegura que el botón esté por encima de otros elementos */
+ }
+
+ .btn-inventario:hover {
+     background-color: #0056b3;
+     /* Azul oscuro al pasar el ratón */
+ }
+
+ /* Estilos para el formulario y la tabla */
+ .form-section,
+ .info-section {
+     margin: 20px;
+ }
+
+ .form-group {
+     margin-bottom: 15px;
+ }
+
+ .buttons button {
+     margin-right: 10px;
+ }
+
+ table {
+     width: 100%;
+     border-collapse: collapse;
+ }
+
+ th,
+ td {
+     padding: 10px;
+     border: 1px solid #ddd;
+     text-align: left;
+ }
+
+ th {
+     background-color: #d17e12;
+     /* Verde */
+ }
+
+ .radio-group {
+     display: flex;
+     align-items: center;
+ }
+
+ .radio-group input {
+     margin-right: 5px;
+ }

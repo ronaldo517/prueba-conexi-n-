@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Departamento</title>
+    <link rel="stylesheet" href="../css/perfil.css"> <!-- Enlace al archivo CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de Departamento -->
+        <div class="form-section">
+            <h2>Departamento</h2>
+            <form id="departamento-form">
+                <div class="form-group">
+                    <label for="codigo-departamento">Código de Departamento:</label>
+                    <input type="text" id="codigo-departamento" name="codigo-departamento" maxlength="3" required>
+                </div>
+                <div class="form-group">
+                    <label for="codigo-pais">Código de País:</label>
+                    <div style="display: flex;">
+                        <input type="text" id="codigo-pais" name="codigo-pais" readonly required
+                            style="width: 50px; margin-right: 10px;">
+                        <select id="pais-select" name="pais-select" required onchange="updateCountryCode()">
+                            <option value="">Seleccione un país</option>
+                            <!-- Opciones de países se llenarán aquí dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nombre-departamento">Nombre del Departamento:</label>
+                    <input type="text" id="nombre-departamento" name="nombre-departamento" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="estado" value="1" required> Activo</label>
+                        <label><input type="radio" name="estado" value="0" required> Inactivo</label>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="button" onclick="submitForm('create')">Crear</button>
+                    <button type="button" onclick="submitForm('update')">Modificar</button>
+                    <button type="button" onclick="submitForm('delete')">Eliminar</button>
+                    <button type="button" onclick="salir()">Salir</button>
+                    <button type="button" onclick="window.location.href='ciudad.html'">Gestión Ciudad</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sección de Listado de Departamentos -->
+        <div class="info-section">
+            <h3>Listado de Departamentos</h3>
+            <table id="departamento-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Código País</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de departamentos se agregarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function submitForm(action) {
+            const form = document.getElementById('departamento-form');
+            const formData = new FormData(form);
+            const data = {
+                Cod_depa: formData.get('codigo-departamento'),
+                Cod_pais: formData.get('codigo-pais'),
+                Nomb: formData.get('nombre-departamento'),
+                Estado: formData.get('estado')
+            };
+
+            let url = `http://localhost:3000/api/departamento`;
+
+            if (action === 'update' || action === 'delete') {
+                url += `/${data.Cod_depa}`;
+            }
+
+            const options = {
+                method: action === 'delete' ? 'DELETE' : (action === 'create' ? 'POST' : 'PUT'),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: action !== 'delete' ? JSON.stringify(data) : null,
+            };
+
+            try {
+                const response = await fetch(url, options);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error desconocido');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchDepartamentos();  // Refrescar la tabla después de la operación
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert(`Error al enviar la solicitud: ${error.message}`);
+            }
+        }
+
+        async function fetchDepartamentos() {
+            try {
+                const response = await fetch('http://localhost:3000/api/departamento');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los departamentos');
+                }
+                const departamentos = await response.json();
+                const tableBody = document.querySelector('#departamento-table tbody');
+                tableBody.innerHTML = ''; // Limpiar la tabla antes de rellenarla
+                departamentos.forEach(departamento => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${departamento.Cod_depa}</td>
+                        <td>${departamento.Cod_pais}</td>
+                        <td>${departamento.Nomb}</td>
+                        <td>${departamento.Estado === 1 ? 'Activo' : 'Inactivo'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al cargar los departamentos:', error);
+                alert('Error al cargar los departamentos');
+            }
+        }
+
+        async function loadCountryOptions() {
+            try {
+                const response = await fetch('http://localhost:3000/api/pais');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los países');
+                }
+                const paises = await response.json();
+                const select = document.getElementById('pais-select');
+                select.innerHTML = '<option value="">Seleccione un país</option>'; // Limpiar y agregar la opción predeterminada
+                paises.forEach(pais => {
+                    const option = document.createElement('option');
+                    option.value = pais.Cod_pais;
+                    option.textContent = `${pais.Nomb} (${pais.Cod_pais})`; // Mostrar nombre y código del país
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar las opciones de países:', error);
+                alert('Error al cargar las opciones de países');
+            }
+        }
+
+        function updateCountryCode() {
+            const select = document.getElementById('pais-select');
+            const codigoPais = document.getElementById('codigo-pais');
+            codigoPais.value = select.value; // Rellenar el campo de código de país con el valor seleccionado
+        }
+
+        // Cargar los departamentos y las opciones de países al cargar la página
+        window.onload = () => {
+            fetchDepartamentos();
+            loadCountryOptions();
+        };
+
+        // Función para manejar la salida al menú principal
+        function salir() {
+            window.location.href = 'menu2.html'; // Redirección a menu2.html
+        }
+    </script>
+</body>
+
+</html>

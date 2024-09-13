@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario</title>
+    <link rel="stylesheet" href="../css/inventario.css"> <!-- Enlace al archivo CSS -->
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de Formulario de Inventario -->
+        <div class="form-section">
+            <h1>Gestión de Inventario</h1>
+            <form id="inventarioForm">
+                <div class="form-group">
+                    <label for="codigo">Código del producto:</label>
+                    <input type="text" id="codigo" name="codigo" required>
+                </div>
+                <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" required>
+                </div>
+                <div class="form-group">
+                    <label for="stock-minimo">Stock mínimo:</label>
+                    <input type="number" id="stock-minimo" name="stockMinimo" required>
+                </div>
+                <div class="form-group">
+                    <label for="stock-maximo">Stock máximo:</label>
+                    <input type="number" id="stock-maximo" name="stockMaximo" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="activo" name="estado" value="1" required>
+                        <label for="activo">Activo</label>
+                        <input type="radio" id="inactivo" name="estado" value="0">
+                        <label for="inactivo">Inactivo</label>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="button" onclick="crearInventario()">Crear</button>
+                    <button type="button" onclick="modificarInventario()">Modificar</button>
+                    <button type="button" onclick="eliminarInventario()">Eliminar</button>
+                    <button type="button" onclick="salir()">Salir</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sección de Listado de Inventario -->
+        <div class="info-section">
+            <h2>Listado de Inventario</h2>
+            <table id="inventario-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Cantidad</th>
+                        <th>Stock Mínimo</th>
+                        <th>Stock Máximo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de inventario se agregarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Botón para gestionar productos -->
+    <button class="btn-producto" onclick="gestionarProduccion()">Gestión Producción</button>
+
+    <script>
+        async function fetchInventarios() {
+            try {
+                const response = await fetch('http://localhost:3000/api/inventario');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los inventarios');
+                }
+                const inventarios = await response.json();
+                const tableBody = document.querySelector('#inventario-table tbody');
+                tableBody.innerHTML = ''; // Limpiar la tabla antes de rellenarla
+                inventarios.forEach(inventario => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${inventario.Cod_prod || 'No disponible'}</td>
+                        <td>${inventario.Canti || 'No disponible'}</td>
+                        <td>${inventario.Stockmin || 'No disponible'}</td>
+                        <td>${inventario.Stockmax || 'No disponible'}</td>
+                        <td>${inventario.Estado === 1 ? 'Activo' : 'Inactivo'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al obtener los inventarios:', error);
+            }
+        }
+
+        async function crearInventario() {
+            const formData = new FormData(document.getElementById('inventarioForm'));
+            const data = {
+                Cod_prod: formData.get('codigo'),
+                Canti: formData.get('cantidad'),
+                Stockmin: formData.get('stockMinimo'),
+                Stockmax: formData.get('stockMaximo'),
+                Estado: formData.get('estado')
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/inventario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al crear el inventario');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchInventarios(); // Actualiza la tabla de inventarios
+            } catch (error) {
+                console.error('Error al crear el inventario:', error);
+                alert('Error al crear el inventario: ' + error.message);
+            }
+        }
+
+        async function modificarInventario() {
+            const formData = new FormData(document.getElementById('inventarioForm'));
+            const data = {
+                Canti: formData.get('cantidad'),
+                Stockmin: formData.get('stockMinimo'),
+                Stockmax: formData.get('stockMaximo'),
+                Estado: formData.get('estado')
+            };
+
+            const codigo = formData.get('codigo');
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/inventario/${codigo}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al modificar el inventario');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchInventarios(); // Actualiza la tabla de inventarios
+            } catch (error) {
+                console.error('Error al modificar el inventario:', error);
+                alert('Error al modificar el inventario: ' + error.message);
+            }
+        }
+
+        async function eliminarInventario() {
+            const codigo = document.getElementById('codigo').value;
+
+            if (!codigo) {
+                alert('Ingrese el código del producto para eliminar');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/inventario/${codigo}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el inventario');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchInventarios(); // Actualiza la tabla de inventarios
+            } catch (error) {
+                console.error('Error al eliminar el inventario:', error);
+                alert('Error al eliminar el inventario: ' + error.message);
+            }
+        }
+
+        function salir() {
+            // Redirecciona o realiza alguna acción al salir
+            alert('Saliendo...');
+        }
+
+        function gestionarProduccion() {
+            // Redirecciona a la página de gestión de producción
+            window.location.href = 'produccion.html'; // Asegúrate de tener este archivo en el mismo directorio
+        }
+
+        // Carga los inventarios al cargar la página
+        window.onload = fetchInventarios;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+ body {
+     font-family: Arial, sans-serif;
+     background-color: #4a90e2;
+     margin: 0;
+     padding: 20px;
+ }
+
+ .container {
+     display: flex;
+     justify-content: space-between;
+ }
+
+ .form-section {
+     background-color: #e3f2fd;
+     padding: 4px;
+     border-radius: 5px;
+     width: 30%;
+ }
+
+ .form-section h2 {
+     background-color: #2196f3;
+     color: white;
+     padding: 5px;
+     border-radius: 3px;
+     text-align: center;
+     margin-bottom: 15px;
+ }
+
+ .form-group {
+     margin-bottom: 10px;
+ }
+
+ .form-group label {
+     display: block;
+     color: #d32f2f;
+     font-weight: bold;
+ }
+
+ .form-group input {
+     width: 100%;
+     padding: 5px;
+     margin-top: 2px;
+     border-radius: 2px;
+     border: 1px solid #ccc;
+ }
+
+ .form-group .radio-group {
+     display: flex;
+     gap: 5px;
+ }
+
+ .form-group .radio-group input {
+     margin-right: 5px;
+ }
+
+ .buttons {
+     display: flex;
+     gap: 10px;
+     justify-content: center;
+     margin-top: 10px;
+     flex-wrap: wrap;
+ }
+
+ .buttons button {
+     padding: 5px 20px;
+     border: none;
+     border-radius: 5px;
+     background-color: #64b5f6;
+     color: white;
+     cursor: pointer;
+     margin-bottom: 10px;
+ }
+
+ .buttons button:hover {
+     background-color: #42a5f5;
+ }
+
+ .gestion-button {
+     background-color: #cfd8dc;
+     padding: 15px;
+     text-align: center;
+     border-radius: 5px;
+     cursor: pointer;
+     margin-top: 20px;
+ }
+
+ .gestion-button:hover {
+     background-color: #b0bec5;
+ }

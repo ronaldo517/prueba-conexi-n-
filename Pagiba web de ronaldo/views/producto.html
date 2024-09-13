@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos</title>
+    <link rel="stylesheet" href="../css/producto.css"> <!-- Enlace al archivo CSS -->
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de Formulario de Productos -->
+        <div class="form-section">
+            <h1>Gestión de Productos</h1>
+            <form id="productoForm">
+                <div class="form-group">
+                    <label for="codigo">Código del producto:</label>
+                    <input type="number" id="codigo" name="codigo" required>
+                </div>
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <input type="text" id="descripcion" name="descripcion" required>
+                </div>
+                <div class="form-group">
+                    <label for="precio-compra">Precio de compra:</label>
+                    <input type="number" step="0.000001" id="precio-compra" name="precioCompra" required>
+                </div>
+                <div class="form-group">
+                    <label for="precio-venta">Precio de venta:</label>
+                    <input type="number" step="0.000001" id="precio-venta" name="precioVenta" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="activo" name="estado" value="1" required>
+                        <label for="activo">Activo</label>
+                        <input type="radio" id="inactivo" name="estado" value="0">
+                        <label for="inactivo">Inactivo</label>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="button" onclick="crearProducto()">Crear</button>
+                    <button type="button" onclick="modificarProducto()">Modificar</button>
+                    <button type="button" onclick="eliminarProducto()">Eliminar</button>
+                    <button type="button" onclick="salir()">Salir</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sección de Listado de Productos -->
+        <div class="info-section">
+            <h2>Listado de Productos</h2>
+            <table id="producto-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Precio Compra</th>
+                        <th>Precio Venta</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de productos se agregarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+   
+    <button class="btn-producto" onclick="gestionarInventario()">Gestión Inventario</button>
+
+    <script>
+        async function fetchProductos() {
+            try {
+                const response = await fetch('http://localhost:3000/api/producto');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los productos');
+                }
+                const productos = await response.json();
+                const tableBody = document.querySelector('#producto-table tbody');
+                tableBody.innerHTML = ''; // Limpiar la tabla antes de rellenarla
+                productos.forEach(producto => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${producto.Cod_prod || 'No disponible'}</td>
+                        <td>${producto.Descr_pro || 'No disponible'}</td>
+                        <td>${(parseFloat(producto.Preci_com) || 0).toFixed(3)}</td>
+                        <td>${(parseFloat(producto.Preci_vent) || 0).toFixed(3)}</td>
+                        <td>${producto.Estado === 1 ? 'Activo' : 'Inactivo'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al obtener los productos:', error);
+            }
+        }
+
+        function validarCampos() {
+            const form = document.getElementById('productoForm');
+            const codigo = form.codigo.value.trim();
+            const descripcion = form.descripcion.value.trim();
+            const precioCompra = form.precioCompra.value.trim();
+            const precioVenta = form.precioVenta.value.trim();
+            const estado = form.estado.value;
+
+            if (!codigo || !descripcion || !precioCompra || !precioVenta || !estado) {
+                alert('Por favor, complete todos los campos.');
+                return false;
+            }
+
+            return true;
+        }
+
+        async function crearProducto() {
+            if (!validarCampos()) return;
+
+            const formData = new FormData(document.getElementById('productoForm'));
+            const codigo = formData.get('codigo');
+
+            // Verifica si el código ya existe en la base de datos
+            try {
+                const existingProductResponse = await fetch(`http://localhost:3000/api/producto/${codigo}`);
+                if (existingProductResponse.ok) {
+                    alert('El código del producto ya existe en la tabla producto.');
+                    return;
+                }
+            } catch (error) {
+                console.error('Error al verificar el producto:', error);
+                alert('Hubo un error al verificar el código del producto.');
+                return;
+            }
+
+            // Procede a crear el producto si el código no existe
+            const data = {
+                codigo: codigo,
+                descripcion: formData.get('descripcion'),
+                precioCompra: parseFloat(formData.get('precioCompra')).toFixed(3),
+                precioVenta: parseFloat(formData.get('precioVenta')).toFixed(3),
+                estado: formData.get('estado')
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/producto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al crear el producto');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchProductos(); // Actualiza la tabla de productos
+            } catch (error) {
+                console.error('Error al crear el producto:', error);
+                alert('Error al crear el producto: ' + error.message);
+            }
+        }
+
+        async function modificarProducto() {
+            if (!validarCampos()) return;
+
+            const formData = new FormData(document.getElementById('productoForm'));
+            const precioCompra = parseFloat(formData.get('precioCompra')).toFixed(4);
+            const precioVenta = parseFloat(formData.get('precioVenta')).toFixed(4);
+
+            const data = {
+                descripcion: formData.get('descripcion'),
+                precioCompra: precioCompra,
+                precioVenta: precioVenta,
+                estado: formData.get('estado')
+            };
+
+            const codigo = formData.get('codigo');
+
+            if (!codigo) {
+                alert('Ingrese el código del producto para modificar');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/producto/${codigo}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al modificar el producto');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchProductos(); // Actualiza la tabla de productos
+            } catch (error) {
+                console.error('Error al modificar el producto:', error);
+                alert('Error al modificar el producto: ' + error.message);
+            }
+        }
+
+        async function eliminarProducto() {
+            const codigo = document.getElementById('codigo').value.trim();
+
+            if (!codigo) {
+                alert('Ingrese el código del producto para eliminar');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/producto/${codigo}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el producto');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchProductos(); // Actualiza la tabla de productos
+            } catch (error) {
+                console.error('Error al eliminar el producto:', error);
+                alert('Error al eliminar el producto: ' + error.message);
+            }
+        }
+
+        function salir() {
+            // Implementa la lógica para salir o redirigir al usuario
+            window.location.href = 'paginaPrincipal.html'; // Ejemplo de redirección
+        }
+
+        function gestionarInventario() {
+            // Implementa la lógica para gestionar inventario
+            window.location.href = 'inventario.html'; // Ejemplo de redirección
+        }
+
+        // Cargar productos al iniciar la página
+        fetchProductos();
+    </script>
+</body>
+
+</html>

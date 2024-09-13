@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Inventarios - Agosto 2024</title>
+    <link rel="stylesheet" href="../css/informe.css"> <!-- Enlace al archivo CSS -->
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Informe de Inventarios - Agosto 2024</h1>
+        <a href="informedeventa.html" class="boton-informe-venta">Informe Venta</a>
+    </header>
+
+    <section id="informeSection">
+        <h2>Ingresar Datos del Informe</h2>
+        <form id="informeForm">
+            <label for="fecha">Fecha de Creación del Informe:</label>
+            <input type="date" id="fecha" name="fecha" required>
+
+            <label for="resumen">Resumen del ejecutivo:</label>
+            <textarea id="resumen" name="resumen" rows="4" required></textarea>
+
+            <label for="producto">Producto con Mayor Inventario:</label>
+            <input type="text" id="producto" name="producto" required>
+
+            <label for="cantidad">Cantidad en Stock:</label>
+            <input type="number" id="cantidad" name="cantidad" required>
+
+            <label for="tabla">Tabla de Inventarios:</label>
+            <textarea id="tabla" name="tabla" rows="8" required></textarea>
+
+            <label for="analisis">Análisis Detallado:</label>
+            <textarea id="analisis" name="analisis" rows="4" required></textarea>
+
+            <label for="conclusiones">Conclusiones y Recomendaciones:</label>
+            <textarea id="conclusiones" name="conclusiones" rows="4" required></textarea>
+
+            <button type="submit">Generar Informe</button>
+        </form>
+    </section>
+
+    <canvas id="informeCanvas" width="800" height="1200"></canvas>
+
+    <section id="imagenGenerada">
+        <a id="downloadLink" style="display:none;" class="boton-informe-venta">Descargar Informe como Imagen</a>
+        <img id="imagePreview" src="" alt="Vista previa del informe generado" style="display:none;">
+    </section>
+
+    <footer>
+        <p>Informe generado por Codelac</p>
+    </footer>
+
+    <script>
+        document.getElementById('informeForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const fecha = document.getElementById('fecha').value;
+            const resumen = document.getElementById('resumen').value;
+            const producto = document.getElementById('producto').value;
+            const cantidad = document.getElementById('cantidad').value;
+            const tabla = document.getElementById('tabla').value;
+            const analisis = document.getElementById('analisis').value;
+            const conclusiones = document.getElementById('conclusiones').value;
+
+            const canvas = document.getElementById('informeCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Limpiar el canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Establecer fondo blanco
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Establecer estilos
+            ctx.font = '16px Arial';
+            ctx.fillStyle = 'black';
+            let y = 20;
+
+            // Dibujar cada sección del informe en el canvas
+            ctx.fillText('Informe de Inventarios - Agosto 2024', 20, y);
+            y += 40;
+
+            ctx.fillText(`Fecha de Creación: ${fecha}`, 20, y);
+            y += 20;
+
+            ctx.fillText('Resumen Ejecutivo:', 20, y);
+            y += 20;
+            ctx.fillText(resumen, 40, y);
+            y += 60;
+
+            ctx.fillText('Producto con Mayor Inventario:', 20, y);
+            y += 20;
+            ctx.fillText(producto + ' - ' + cantidad + ' unidades', 40, y);
+            y += 40;
+
+            ctx.fillText('Tabla de Inventarios:', 20, y);
+            y += 20;
+            ctx.fillText(tabla, 40, y);
+            y += 80;
+
+            ctx.fillText('Análisis Detallado:', 20, y);
+            y += 20;
+            ctx.fillText(analisis, 40, y);
+            y += 60;
+
+            ctx.fillText('Conclusiones y Recomendaciones:', 20, y);
+            y += 20;
+            ctx.fillText(conclusiones, 40, y);
+            y += 40;
+
+            // Mostrar canvas y generar imagen
+            canvas.style.display = 'block';
+            const image = canvas.toDataURL('image/png');
+
+            // Mostrar imagen en la página
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = image;
+            imagePreview.style.display = 'block';
+
+            // Habilitar el enlace de descarga
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = image;
+            downloadLink.download = 'informe-inventario.png';
+            downloadLink.style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>

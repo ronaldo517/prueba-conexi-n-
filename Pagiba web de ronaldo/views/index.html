@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="../css/index.css"> <!-- Enlace al archivo CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2><img src="../img/lo.jpg" alt="Logo"> Registro</h2>
+            <form id="registro-form">
+                <input type="text" id="identificacion-usuario" name="Id_usuar" placeholder="Identificación del usuario"
+                    required>
+                <input type="text" id="codigo-perfil" name="Cod_perfil" placeholder="Código del perfil" required>
+                <input type="text" id="nombre1" name="Nom1" placeholder="Nombre1" required>
+                <input type="text" id="nombre2" name="Nom2" placeholder="Nombre2">
+                <input type="text" id="apellido1" name="Apell1" placeholder="Apellido1" required>
+                <input type="text" id="apellido2" name="Apell2" placeholder="Apellido2">
+                <input type="email" id="correo" name="Correo" placeholder="Correo" required>
+                <input type="password" id="contrasena" name="Contrase" placeholder="Contraseña" required>
+                <label for="estado">Estado:</label>
+                <select id="estado" name="Estado" required>
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+
+                <input type="submit" value="Registrar">
+            </form>
+            <a href="../views/inici.html">¿YA TIENES CUENTA? Iniciar sesión</a>
+        </div>
+        <div class="image-container">
+            <img src="../img/roal.jpg" alt="Imagen de fondo">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registro-form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('http://localhost:3000/usuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Redirigir a la página de inicio
+                    window.location.href = '../views/inici.html';
+                } else {
+                    // Mostrar mensaje de error
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error al registrar el usuario:', error);
+                alert('Error en el servidor');
+            }
+        });
+    </script>
+</body>
+
+</html>

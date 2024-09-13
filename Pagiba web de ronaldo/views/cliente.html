@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cliente</title>
+    <link rel="stylesheet" href="../css/cliente.css"> <!-- Enlace a tu archivo CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- Sección del formulario -->
+            <div class="form-section">
+                <h2>Cliente</h2>
+
+                <!-- Campos del formulario -->
+                <div class="form-group">
+                    <label for="identificacion-cliente">Identificación del cliente:</label>
+                    <input type="text" id="identificacion-cliente" name="identificacion-cliente">
+                </div>
+                <div class="form-group">
+                    <label for="nombre1">Primer nombre:</label>
+                    <input type="text" id="nombre1" name="nombre1">
+                </div>
+                <div class="form-group">
+                    <label for="nombre2">Segundo nombre:</label>
+                    <input type="text" id="nombre2" name="nombre2">
+                </div>
+                <div class="form-group">
+                    <label for="apellido1">Primer apellido:</label>
+                    <input type="text" id="apellido1" name="apellido1">
+                </div>
+                <div class="form-group">
+                    <label for="apellido2">Segundo apellido:</label>
+                    <input type="text" id="apellido2" name="apellido2">
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono">
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo electrónico:</label>
+                    <input type="email" id="correo" name="correo">
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion">
+                </div>
+                <div class="form-group">
+                    <label for="codigo-pais">Código del país:</label>
+                    <select id="codigo-pais" name="codigo-pais" onchange="cargarDepartamentos()">
+                        <option value="">Seleccione un país</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="codigo-dpto">Código del departamento:</label>
+                    <select id="codigo-dpto" name="codigo-dpto" onchange="cargarCiudades()">
+                        <option value="">Seleccione un departamento</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="codigo-ciudad">Código de la ciudad:</label>
+                    <select id="codigo-ciudad" name="codigo-ciudad">
+                        <option value="">Seleccione una ciudad</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <input type="radio" id="estado-activo" name="estado" value="1"> Activo
+                    <input type="radio" id="estado-inactivo" name="estado" value="0"> Inactivo
+                </div>
+
+                <div class="buttons">
+                    <button type="button" onclick="crearCliente()">Crear</button>
+                    <button type="button" onclick="modificarCliente()">Modificar</button>
+                    <button type="button" onclick="eliminarCliente()">Eliminar</button>
+                    <button type="button" onclick="redireccionarMenu()">Salir</button>
+                    <button type="button" onclick="redireccionarVenta()">Gestión Venta</button>
+                </div>
+            </div>
+
+            <!-- Sección para mostrar la lista de clientes -->
+            <div class="clients-list-section">
+                <h3>Lista de Clientes</h3>
+                <table id="clientes-table">
+                    <thead>
+                        <tr>
+                            <th>Identificación</th>
+                            <th>Primer Nombre</th>
+                            <th>Segundo Nombre</th>
+                            <th>Primer Apellido</th>
+                            <th>Segundo Apellido</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Dirección</th>
+                            <th>Código País</th>
+                            <th>Código Departamento</th>
+                            <th>Código Ciudad</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los registros de clientes se insertarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = 'http://localhost:3000/api';  // Cambia esta URL según tu configuración
+
+       async function cargarPaises() {
+            try {
+                const response = await fetch(`${baseUrl}/pais`);
+                const paises = await response.json();
+                console.log('Paises:', paises); // Verifica los datos recibidos
+                const selectPais = document.getElementById('codigo-pais');
+                selectPais.innerHTML = '<option value="">Seleccione un país</option>';
+                paises.forEach(pais => {
+                    const option = document.createElement('option');
+                    option.value = pais.Cod_pais;
+                    option.textContent = `${pais.Nomb} (${pais.Cod_pais})`; // Muestra el nombre y el código
+                    selectPais.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar los países:', error);
+            }
+        }
+
+        async function cargarDepartamentos() {
+            const codigoPais = document.getElementById('codigo-pais').value;
+            const selectDpto = document.getElementById('codigo-dpto');
+            selectDpto.innerHTML = '<option value="">Seleccione un departamento</option>';
+            document.getElementById('codigo-ciudad').innerHTML = '<option value="">Seleccione una ciudad</option>';
+            document.getElementById('codigo-ciudad').disabled = true;
+
+            if (codigoPais) {
+                try {
+                    const response = await fetch(`${baseUrl}/departamento`);
+                    const departamentos = await response.json();
+                    console.log('Departamentos:', departamentos); // Verifica los datos recibidos
+                    const departamentosFiltrados = departamentos.filter(dpto => dpto.Cod_pais === codigoPais);
+                    if (departamentosFiltrados.length === 0) {
+                        selectDpto.innerHTML = '<option value="">No hay departamentos disponibles</option>';
+                    } else {
+                        departamentosFiltrados.forEach(dpto => {
+                            const option = document.createElement('option');
+                            option.value = dpto.Cod_depa;
+                            option.textContent = `${dpto.Nomb} (${dpto.Cod_depa})`; // Muestra el nombre y el código
+                            selectDpto.appendChild(option);
+                        });
+                        selectDpto.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error al cargar los departamentos:', error);
+                }
+            } else {
+                selectDpto.disabled = true;
+                document.getElementById('codigo-ciudad').disabled = true;
+            }
+        }
+
+        async function cargarCiudades() {
+            const codigoDpto = document.getElementById('codigo-dpto').value;
+            const selectCiudad = document.getElementById('codigo-ciudad');
+            selectCiudad.innerHTML = '<option value="">Seleccione una ciudad</option>';
+
+            if (codigoDpto) {
+                try {
+                    const response = await fetch(`${baseUrl}/ciudad`);
+                    const ciudades = await response.json();
+                    console.log('Ciudades:', ciudades); // Verifica los datos recibidos
+                    const ciudadesFiltradas = ciudades.filter(ciudad => ciudad.Cod_depa === codigoDpto);
+                    if (ciudadesFiltradas.length === 0) {
+                        selectCiudad.innerHTML = '<option value="">No hay ciudades disponibles</option>';
+                    } else {
+                        ciudadesFiltradas.forEach(ciudad => {
+                            const option = document.createElement('option');
+                            option.value = ciudad.Cod_ciudad;
+                            option.textContent = `${ciudad.Nomb} (${ciudad.Cod_ciudad})`; // Muestra el nombre y el código
+                            selectCiudad.appendChild(option);
+                        });
+                        selectCiudad.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error al cargar las ciudades:', error);
+                }
+            } else {
+                selectCiudad.disabled = true;
+            }
+        }
+
+        async function crearCliente() {
+            const cliente = {
+                identificacion_cliente: document.getElementById('identificacion-cliente').value,
+                nombre1: document.getElementById('nombre1').value,
+                nombre2: document.getElementById('nombre2').value,
+                apellido1: document.getElementById('apellido1').value,
+                apellido2: document.getElementById('apellido2').value,
+                telefono: document.getElementById('telefono').value,
+                correo: document.getElementById('correo').value,
+                direccion: document.getElementById('direccion').value,
+                Cod_pais: document.getElementById('codigo-pais').value,
+                Cod_dpto: document.getElementById('codigo-dpto').value,
+                Cod_ciudad: document.getElementById('codigo-ciudad').value,
+                estado: document.querySelector('input[name="estado"]:checked').value
+            };
+
+            console.log('Cliente a crear:', cliente); // Verifica los datos que se enviarán
+
+            try {
+                const response = await fetch(`${baseUrl}/cliente`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cliente)
+                });
+                if (response.ok) {
+                    alert('Cliente creado exitosamente');
+                    cargarClientes(); // Recargar la lista de clientes
+                } else {
+                    alert('Error al crear el cliente');
+                }
+            } catch (error) {
+                console.error('Error al crear el cliente:', error);
+            }
+        }
+
+        async function modificarCliente() {
+            const cliente = {
+                identificacion_cliente: document.getElementById('identificacion-cliente').value,
+                nombre1: document.getElementById('nombre1').value,
+                nombre2: document.getElementById('nombre2').value,
+                apellido1: document.getElementById('apellido1').value,
+                apellido2: document.getElementById('apellido2').value,
+                telefono: document.getElementById('telefono').value,
+                correo: document.getElementById('correo').value,
+                direccion: document.getElementById('direccion').value,
+                Cod_pais: document.getElementById('codigo-pais').value,
+                Cod_dpto: document.getElementById('codigo-dpto').value,
+                Cod_ciudad: document.getElementById('codigo-ciudad').value,
+                estado: document.querySelector('input[name="estado"]:checked').value
+            };
+
+            console.log('Cliente a modificar:', cliente); // Verifica los datos que se enviarán
+
+            try {
+                const response = await fetch(`${baseUrl}/cliente/${cliente.identificacion_cliente}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cliente)
+                });
+                if (response.ok) {
+                    alert('Cliente modificado exitosamente');
+                    cargarClientes(); // Recargar la lista de clientes
+                } else {
+                    alert('Error al modificar el cliente');
+                }
+            } catch (error) {
+                console.error('Error al modificar el cliente:', error);
+            }
+        }
+
+        async function eliminarCliente() {
+            const identificacion = document.getElementById('identificacion-cliente').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/cliente/${identificacion}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    alert('Cliente eliminado exitosamente');
+                    cargarClientes(); // Recargar la lista de clientes
+                } else {
+                    alert('Error al eliminar el cliente');
+                }
+            } catch (error) {
+                console.error('Error al eliminar el cliente:', error);
+            }
+        }
+
+        function redireccionarMenu() {
+            window.location.href = 'menu2.html';
+        }
+
+        function redireccionarVenta() {
+            window.location.href = 'venta.html';
+        }
+
+        async function cargarClientes() {
+            try {
+                const response = await fetch(`${baseUrl}/clientes`);
+                const clientes = await response.json();
+                console.log('Clientes:', clientes); // Verifica los datos recibidos
+                const clientesTable = document.querySelector('#clientes-table tbody');
+                clientesTable.innerHTML = ''; // Limpiar la tabla existente
+
+                clientes.forEach(cliente => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td>${cliente.Idecliente}</td>
+                <td>${cliente.Nom1}</td>
+                <td>${cliente.Nom2 || ''}</td>
+                <td>${cliente.Apell1}</td>
+                <td>${cliente.Apell2 || ''}</td>
+                <td>${cliente.Telef}</td>
+                <td>${cliente.Correo}</td>
+                <td>${cliente.Direcc}</td>
+                <td>${cliente.pais_Cod_pais}</td> <!-- Corregido -->
+                <td>${cliente.departamento_Cod_depa}</td> <!-- Corregido -->
+                <td>${cliente.ciudad_Cod_ciudad}</td> <!-- Corregido -->
+                <td>${cliente.Estado === 1 ? 'Activo' : 'Inactivo'}</td>
+            `;
+                    clientesTable.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al cargar la lista de clientes:', error);
+            }
+        }
+
+        // Cargar los países y la lista de clientes al cargar la página
+        window.onload = async () => {
+            await cargarPaises();
+            await cargarClientes(); // Cargar la lista de clientes
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+ body {
+     font-family: Arial, sans-serif;
+     background-image: url('../img/menu2.png');
+     /* Cambia esto al path de tu imagen de fondo */
+     background-size: cover;
+     margin: 0;
+     padding: 0;
+ }
+
+ .menu {
+     position: absolute;
+     top: 10px;
+     left: 10px;
+     background-color: rgba(255, 255, 255, 0.8);
+     padding: 5px;
+     border-radius: 5px;
+ }
+
+ .title {
+     position: absolute;
+     top: 60px;
+     left: 20%;
+     transform: translateX(-50%);
+     background-color: rgba(255, 255, 255, 0.8);
+     padding: 10px;
+     border-radius: 5px;
+     font-weight: bold;
+     text-align: center;
+ }
+
+ .buttons-container {
+     position: absolute;
+     top: 300px;
+     left: 50%;
+     transform: translateX(-50%);
+ }
+
+ .button {
+     position: absolute;
+     padding: 5px 10px;
+     background-color: rgba(0, 0, 255, 0.8);
+     color: white;
+     border-radius: 5px;
+     cursor: pointer;
+ }
+
+ .button:hover {
+     background-color: rgb(211, 211, 226);
+ }
+
+ .producto {
+     left: -500px;
+     top: 100px;
+ }
+
+ .inventario {
+     left: -400px;
+     top: 50px;
+ }
+
+ .produccion {
+     left: -300px;
+     top: 100px;
+ }
+
+ .pais {
+     left: -180px;
+     top: 50px;
+ }
+
+ .cliente {
+     left: -120px;
+     top: 100px;
+ }
+
+ .venta {
+     left: -40px;
+     top: 50px;
+ }
+
+ .usuario {
+     left: -1px;
+     top: 100px;
+ }
+
+ .perfil {
+     left: -1px;
+     top: 100px;
+ }
+
+ /* Otros estilos existentes */
+
+ /* Estilo para el botón de informe */
+ .button.informe {
+     position: fixed;
+     top: 20px;
+     right: 20px;
+     padding: 10px 20px;
+     background-color: #3498db;
+     /* Color de fondo del botón */
+     color: white;
+     /* Color del texto */
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+     z-index: 1000;
+     /* Asegura que el botón esté sobre otros elementos */
+ }
+
+ .button.informe:hover {
+     background-color: #2980b9;
+     /* Color del fondo al pasar el cursor */
+ }

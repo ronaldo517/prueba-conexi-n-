@@ -1,0 +1,200 @@
+body {
+     font-family: Arial, sans-serif;
+     background-color: #87CEEB;
+     margin: 0;
+     padding: 0;
+ }
+
+ .container {
+     display: flex;
+     justify-content: space-between;
+     padding: 20px;
+ }
+
+ .form-section {
+     width: 60%;
+     padding: 20px;
+     background-color: #5DADE2;
+     border-radius: 10px;
+     box-shadow: 0px 0px 10px #888888;
+ }
+
+ .form-section h1 {
+     font-size: 24px;
+     color: #fff;
+     background-color: #1E90FF;
+     padding: 10px;
+     border-radius: 5px;
+     text-align: center;
+ }
+
+ .form-group {
+     margin: 15px 0;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+ }
+
+ .form-group label {
+     font-size: 16px;
+     font-weight: bold;
+     color: #FF6347;
+     width: 30%;
+ }
+
+ .form-group input[type="text"] {
+     width: 65%;
+     padding: 8px;
+     border: none;
+     border-radius: 5px;
+     box-shadow: 0px 0px 5px #888888;
+ }
+
+ .radio-group {
+     display: flex;
+     align-items: center;
+ }
+
+ .radio-group label {
+     margin-left: 10px;
+     color: #000;
+     font-weight: normal;
+ }
+
+ .buttons {
+     display: flex;
+     justify-content: space-around;
+     margin-top: 20px;
+ }
+
+ .buttons input[type="button"] {
+     padding: 10px 20px;
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+     background-color: #D3D3D3;
+     color: #000;
+     font-weight: bold;
+     box-shadow: 0px 0px 5px #888888;
+ }
+
+ .buttons input[type="button"]:hover {
+     background-color: #A9A9A9;
+ }
+
+ .buttons input#guardar {
+     background-color: #8B4513;
+     color: #fff;
+ }
+
+ .buttons input#guardar:hover {
+     background-color: #A0522D;
+ }
+
+ .info-section {
+     width: 35%;
+     padding: 20px;
+     background-color: #5DADE2;
+     border-radius: 10px;
+     box-shadow: 0px 0px 10px #888888;
+ }
+
+ .info-section h2 {
+     font-size: 18px;
+     color: #000;
+     text-align: center;
+     background-color: #D3D3D3;
+     padding: 10px;
+     border-radius: 5px;
+ }
+
+ .info-section p {
+     font-size: 16px;
+     margin-top: 20px;
+ }
+
+ .info-section img {
+     width: 100%;
+     margin-top: 1px;
+     border-radius: 3px;
+     box-shadow: 0px 0px 5px #888888;
+ }
+
+ 
+ .table-section {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+
+
+
+
+
+
+
+/* Estilos para el botón azul en la esquina inferior derecha */
+.btn-producto {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    /* Azul */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1000;
+    /* Asegura que el botón esté por encima de otros elementos */
+}
+
+.btn-producto:hover {
+    background-color: #0056b3;
+    /* Azul oscuro al pasar el ratón */
+}
+
+/* Estilos para el formulario y la tabla */
+.form-section,
+.info-section {
+    margin: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.buttons button {
+    margin-right: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #17df10;
+}

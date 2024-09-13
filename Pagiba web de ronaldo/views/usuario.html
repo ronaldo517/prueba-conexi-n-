@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #4a90e2;
+            margin: 0;
+            padding: 100px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-section {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .form-section h2 {
+            background-color: #2196f3;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-group label {
+            color: #d32f2f;
+            font-weight: bold;
+            flex: 0 0 30%;
+        }
+
+        .form-group input {
+            width: 65%;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        .form-group .radio-group {
+            display: flex;
+            gap: 10px;
+            width: 65%;
+            justify-content: flex-start;
+        }
+
+        .form-group .radio-group input {
+            margin-right: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #64b5f6;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .buttons button:hover {
+            background-color: #42a5f5;
+        }
+
+        .gestion-usuario {
+            background-color: #cfd8dc;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .gestion-usuario:hover {
+            background-color: #b0bec5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-section">
+        <h2>Gestión de Usuario</h2>
+        <div class="form-group">
+            <label for="id-usuar">Identificación del usuario:</label>
+            <input type="text" id="id-usuar" name="id-usuar">
+        </div>
+        <div class="form-group">
+            <label for="cod-perfil">Código del perfil:</label>
+            <input type="text" id="cod-perfil" name="cod-perfil">
+        </div>
+        <div class="form-group">
+            <label for="nom1">Nombre1:</label>
+            <input type="text" id="nom1" name="nom1">
+        </div>
+        <div class="form-group">
+            <label for="nom2">Nombre2:</label>
+            <input type="text" id="nom2" name="nom2">
+        </div>
+        <div class="form-group">
+            <label for="apell1">Apellido1:</label>
+            <input type="text" id="apell1" name="apell1">
+        </div>
+        <div class="form-group">
+            <label for="apell2">Apellido2:</label>
+            <input type="text" id="apell2" name="apell2">
+        </div>
+        <div class="form-group">
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" name="correo">
+        </div>
+        <div class="form-group">
+            <label for="contrase">Contraseña:</label>
+            <input type="password" id="contrase" name="contrase">
+        </div>
+        <div class="form-group">
+            <label>Estado:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="estado" value="1"> Activo</label>
+                <label><input type="radio" name="estado" value="0"> Inactivo</label>
+            </div>
+        </div>
+        <div class="gestion-usuario">
+            Gestión Usuario
+        </div>
+        <div class="buttons">
+            <button>Crear</button>
+            <button>Modificar</button>
+            <button>Eliminar</button>
+            <button>Salir</button>
+        </div>
+    </div>
+</body>
+
+</html>

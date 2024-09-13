@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de País</title>
+    <link rel="stylesheet" href="../css/perfil.css"> <!-- Enlace al archivo CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sección de País -->
+        <div class="form-section">
+            <h2>País</h2>
+            <form id="pais-form">
+                <div class="form-group">
+                    <label for="codigo-pais">Código de País:</label>
+                    <input type="text" id="codigo-pais" name="codigo-pais" maxlength="3" required>
+                </div>
+                <div class="form-group">
+                    <label for="nombre-pais">Nombre del País:</label>
+                    <input type="text" id="nombre-pais" name="nombre-pais" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="estado" value="1" required> Activo</label>
+                        <label><input type="radio" name="estado" value="0" required> Inactivo</label>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button type="button" onclick="submitForm('create')">Crear</button>
+                    <button type="button" onclick="submitForm('update')">Modificar</button>
+                    <button type="button" onclick="submitForm('delete')">Eliminar</button>
+                    
+                    <button type="button" onclick="salir()">Salir</button>
+                    <button type="button" onclick="window.location.href='departamento.html'">Gestión
+                        Departamento</button> <!-- Nuevo botón -->
+                </div>
+            </form>
+        </div>
+
+        <!-- Sección de Listado de Países -->
+        <div class="info-section">
+            <h3>Listado de Países</h3>
+            <table id="pais-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas de países se agregarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function submitForm(action) {
+            const form = document.getElementById('pais-form');
+            const formData = new FormData(form);
+            const data = {
+                Cod_pais: formData.get('codigo-pais'),
+                Nomb: formData.get('nombre-pais'),
+                Estado: formData.get('estado')
+            };
+
+            let url = `http://localhost:3000/api/pais`;
+
+            if (action === 'update' || action === 'delete') {
+                url += `/${data.Cod_pais}`;
+            }
+
+            const options = {
+                method: action === 'delete' ? 'DELETE' : (action === 'create' ? 'POST' : 'PUT'),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: action !== 'delete' ? JSON.stringify(data) : null,
+            };
+
+            try {
+                const response = await fetch(url, options);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error desconocido');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                fetchPaises();  // Refrescar la tabla después de la operación
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert(`Error al enviar la solicitud: ${error.message}`);
+            }
+        }
+
+        async function fetchPaises() {
+            try {
+                const response = await fetch('http://localhost:3000/api/pais');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los países');
+                }
+                const paises = await response.json();
+                const tableBody = document.querySelector('#pais-table tbody');
+                tableBody.innerHTML = ''; // Limpiar la tabla antes de rellenarla
+                paises.forEach(pais => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${pais.Cod_pais}</td>
+                        <td>${pais.Nomb}</td>
+                        <td>${pais.Estado === 1 ? 'Activo' : 'Inactivo'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al cargar los países:', error);
+                alert('Error al cargar los países');
+            }
+        }
+
+        // Cargar los países al cargar la página
+        window.onload = fetchPaises;
+
+        // Función para manejar la salida al menú principal
+        function salir() {
+            window.location.href = 'menu2.html'; // Redirección a menu2.html
+        }
+    </script>
+</body>
+
+</html>
