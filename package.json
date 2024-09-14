@@ -1,9 +1,9 @@
 {
   "name": "pagiba-web-de-ronaldo",
   "version": "1.0.0",
-  "main": "index.js",  
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"  
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
