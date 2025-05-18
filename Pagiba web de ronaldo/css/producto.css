@@ -1,200 +1,175 @@
 body {
-     font-family: Arial, sans-serif;
-     background-color: #87CEEB;
-     margin: 0;
-     padding: 0;
- }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e9f4fb;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
- .container {
-     display: flex;
-     justify-content: space-between;
-     padding: 20px;
- }
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px;
+    gap: 20px;
+}
 
- .form-section {
-     width: 60%;
-     padding: 20px;
-     background-color: #5DADE2;
-     border-radius: 10px;
-     box-shadow: 0px 0px 10px #888888;
- }
+.form-section, .info-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+}
 
- .form-section h1 {
-     font-size: 24px;
-     color: #fff;
-     background-color: #1E90FF;
-     padding: 10px;
-     border-radius: 5px;
-     text-align: center;
- }
+.form-section {
+    flex: 3;
+}
 
- .form-group {
-     margin: 15px 0;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
- }
+.info-section {
+    flex: 2;
+}
 
- .form-group label {
-     font-size: 16px;
-     font-weight: bold;
-     color: #FF6347;
-     width: 30%;
- }
+.form-section h1 {
+    font-size: 26px;
+    background-color: #3498db;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
- .form-group input[type="text"] {
-     width: 65%;
-     padding: 8px;
-     border: none;
-     border-radius: 5px;
-     box-shadow: 0px 0px 5px #888888;
- }
+.form-group {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
- .radio-group {
-     display: flex;
-     align-items: center;
- }
+.form-group label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    width: 30%;
+}
 
- .radio-group label {
-     margin-left: 10px;
-     color: #000;
-     font-weight: normal;
- }
+.form-group input[type="text"] {
+    width: 65%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
 
- .buttons {
-     display: flex;
-     justify-content: space-around;
-     margin-top: 20px;
- }
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
- .buttons input[type="button"] {
-     padding: 10px 20px;
-     border: none;
-     border-radius: 5px;
-     cursor: pointer;
-     background-color: #D3D3D3;
-     color: #000;
-     font-weight: bold;
-     box-shadow: 0px 0px 5px #888888;
- }
+.radio-group label {
+    font-weight: 500;
+    color: #555;
+}
 
- .buttons input[type="button"]:hover {
-     background-color: #A9A9A9;
- }
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
 
- .buttons input#guardar {
-     background-color: #8B4513;
-     color: #fff;
- }
+.buttons input[type="button"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #dcdcdc;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
 
- .buttons input#guardar:hover {
-     background-color: #A0522D;
- }
+.buttons input[type="button"]:hover {
+    background-color: #bbb;
+}
 
- .info-section {
-     width: 35%;
-     padding: 20px;
-     background-color: #5DADE2;
-     border-radius: 10px;
-     box-shadow: 0px 0px 10px #888888;
- }
+#guardar {
+    background-color: #27ae60;
+    color: white;
+}
 
- .info-section h2 {
-     font-size: 18px;
-     color: #000;
-     text-align: center;
-     background-color: #D3D3D3;
-     padding: 10px;
-     border-radius: 5px;
- }
+#guardar:hover {
+    background-color: #219150;
+}
 
- .info-section p {
-     font-size: 16px;
-     margin-top: 20px;
- }
+.info-section h2 {
+    font-size: 20px;
+    text-align: center;
+    background-color: #ecf0f1;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
 
- .info-section img {
-     width: 100%;
-     margin-top: 1px;
-     border-radius: 3px;
-     box-shadow: 0px 0px 5px #888888;
- }
-
- 
- .table-section {
+.info-section p {
+    font-size: 15px;
     margin-top: 20px;
+    line-height: 1.5;
+}
+
+.info-section img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-section {
+    margin-top: 30px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 th, td {
-    padding: 10px;
+    padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
 }
 
+tr:hover {
+    background-color: #f1f1f1;
+}
 
-
-
-
-
-
-
-/* Estilos para el botón azul en la esquina inferior derecha */
+/* Botón flotante inferior derecho */
 .btn-producto {
     position: fixed;
     bottom: 20px;
     right: 20px;
     background-color: #007bff;
-    /* Azul */
-    color: white;
+    color: rgb(179, 168, 168);
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 12px 24px;
+    border-radius: 8px;
     font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
     z-index: 1000;
-    /* Asegura que el botón esté por encima de otros elementos */
 }
 
 .btn-producto:hover {
     background-color: #0056b3;
-    /* Azul oscuro al pasar el ratón */
-}
-
-/* Estilos para el formulario y la tabla */
-.form-section,
-.info-section {
-    margin: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.buttons button {
-    margin-right: 10px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-th {
-    background-color: #17df10;
 }

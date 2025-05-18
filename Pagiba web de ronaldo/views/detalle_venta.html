@@ -68,7 +68,7 @@
         const apiUrl = 'http://localhost:3000/api/detalle_venta'; // URL de la API de detalles de venta
 
         document.getElementById('create-detalle').addEventListener('click', async () => {
-            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Cod_venta = document.getElementById('codigo-venta').value;
             const Cod_prod = document.getElementById('codigo-producto').value;
             const Cant = document.getElementById('cantidad').value;
             const ValorUnit = document.getElementById('valor-unitario').value;
@@ -78,7 +78,7 @@
                 const response = await fetch(`${apiUrl}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ Cod_ven, Cod_prod, Cant, ValorUnit, Estado })
+                    body: JSON.stringify({ Cod_venta, Cod_prod, Cant, ValorUnit, Estado })
                 });
 
                 const data = await response.json();
@@ -95,14 +95,14 @@
         });
 
         document.getElementById('update-detalle').addEventListener('click', async () => {
-            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Cod_venta = document.getElementById('codigo-venta').value;
             const Cod_prod = document.getElementById('codigo-producto').value;
             const Cant = document.getElementById('cantidad').value;
             const ValorUnit = document.getElementById('valor-unitario').value;
             const Estado = document.querySelector('input[name="estado"]:checked').value;
 
             try {
-                const response = await fetch(`${apiUrl}/${Cod_ven}/${Cod_prod}`, {
+                const response = await fetch(`${apiUrl}/${Cod_venta}/${Cod_prod}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ Cant, ValorUnit, Estado })
@@ -122,11 +122,11 @@
         });
 
         document.getElementById('delete-detalle').addEventListener('click', async () => {
-            const Cod_ven = document.getElementById('codigo-venta').value;
+            const Cod_venta = document.getElementById('codigo-venta').value;
             const Cod_prod = document.getElementById('codigo-producto').value;
 
             try {
-                const response = await fetch(`${apiUrl}/${Cod_ven}/${Cod_prod}`, {
+                const response = await fetch(`${apiUrl}/${Cod_venta}/${Cod_prod}`, {
                     method: 'DELETE'
                 });
 
@@ -157,7 +157,7 @@
 
                 data.forEach(detalle => {
                     const row = tableBody.insertRow();
-                    row.insertCell().innerText = detalle.Cod_ven;
+                    row.insertCell().innerText = detalle.Cod_venta;
                     row.insertCell().innerText = detalle.Cod_prod;
                     row.insertCell().innerText = detalle.Cant;
                     row.insertCell().innerText = detalle.ValorUni;
